@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Calculadora de Descontos</title>
+    <link rel="stylesheet" href="estilo.css">
+</head>
+<body>
+    <div class="logo">
+        <h1 class="title">Calculadora de Descontos</h1>
+        <h2 class="subtitle">Insira seu salário e receba as informações</h2>
+    </div>
+    <div class="input__items">
+        <label for="nome">Nome:</label>
+        <input type="text" id="nome" name="nome">
+        <br><br>
+        <label for="salario">Salário:</label>
+        <input type="number" id="salario" name="salario">
+        <br><br>
+        <label for="faltas">Faltas:</label>
+        <input type="number" id="faltas" name="faltas">
+        <br><br>
+        <button id="button__confirm">Confirmar</button>
+        <br><br>
+    </div>
+    <p id="nome-exibido"></p>
+    <div class="informations">
+        <p id="fgtsText">O valor do FGTS é: <span></span></p>
+        <p id="inssText">O valor do INSS é: <span></span></p>
+        <p id="faltasText">O valor das faltas é: <span></span></p>
+        <p id="irrfText">O valor do IRRF é: <span></span></p>
+        <p id="salarioLiquidoText">O salário líquido é: <span></span></p>
+    </div>
+    <script>
+        document.getElementById("button__confirm").addEventListener("click", function () {
+            var nome = document.getElementById("nome").value;
+            var salario = parseFloat(document.getElementById("salario").value);
+            var faltas = parseInt(document.getElementById("faltas").value);
+
+            function fgts(salario) {
+                return parseFloat((salario * 0.08).toFixed(2));
+            }
+
+            function calcularDeducaoSalarial(salario, faltas) {
+                return parseFloat(((salario / 30) * faltas).toFixed(2));
+            }
+
+            function inss(salario) {
+                if (salario <= 1212) {
+                    return parseFloat((salario * 0.075).toFixed(2));
+                } else if (salario <= 2427.35) {
+                    return parseFloat((salario * 0.09).toFixed(2));
+                } else if (salario <= 3641.03) {
+                    return parseFloat((salario * 0.12).toFixed(2));
+                } else if (salario <= 7507.49) {
+                    return parseFloat((salario * 0.14).toFixed(2));
+                } else {
+                    return 1051.05;
+                }
+            }
+
+            function irrf(salario) {
+                if (salario <= 1903.98) {
+                    return 0;
+                } else if (salario <= 2826.65) {
+                    return parseFloat(((salario * 0.075) - 142.80).toFixed(2));
+                } else if (salario <= 3751.05) {
+                    return parseFloat(((salario * 0.15) - 354.80).toFixed(2));
+                } else if (salario <= 4664.68) {
+                    return parseFloat(((salario * 0.225) - 636.13).toFixed(2));
+                } else {
+                    return parseFloat(((salario * 0.275) - 869.36).toFixed(2));
+                }
+            }
+
+            var fgtsValue = fgts(salario);
+            var inssValue = inss(salario);
+            var deducaoValue = calcularDeducaoSalarial(salario, faltas);
+            var irrfValue = irrf(salario);
+            var salarioLiquidoValue = salario - deducaoValue - inssValue - irrfValue;
+
+            document.getElementById("nome-exibido").textContent = "Olá, " + nome + (" esses são os seus descontos:");
+            document.getElementById("fgtsText").querySelector("span").textContent = fgtsValue.toFixed(2);
+            document.getElementById("inssText").querySelector("span").textContent = inssValue.toFixed(2);
+            document.getElementById("faltasText").querySelector("span").textContent = deducaoValue.toFixed(2);
+            document.getElementById("irrfText").querySelector("span").textContent = irrfValue.toFixed(2);
+            document.getElementById("salarioLiquidoText").querySelector("span").textContent = salarioLiquidoValue.toFixed(2);
+        });
+    </script>
+</body>
+</html>
+
